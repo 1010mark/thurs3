@@ -1,3 +1,9 @@
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.178.0/build/three.module.min.js";
+import Stats from 'https://cdn.jsdelivr.net/npm/three@0.178.0/examples/jsm/libs/stats.module.js';
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
+
 let scene, camera, renderer;
 let planets = [];
 let isRunning = false;
@@ -295,7 +301,7 @@ function createUI() {
         const div = document.createElement('div');
         div.className = 'planet-config';
         div.innerHTML = `
-            <h4>${config.name} ${index > 0 ? `<button class="remove-btn" onclick="removePlanet(${index})">削除</button>` : ''}</h4>
+            <h4>${config.name} ${index > 0 ? `<button class="remove-btn" data-planet-index="${index}">削除</button>` : ''}</h4>
             ${index > 0 ? `<div class="orbit-info"><span id="orbit-display-${index}" style="display: none; color: #00ff00; font-size: 0.9em;"></span></div>` : ''}
             <div class="input-group">
                 <label>質量: <input type="number" value="${config.mass}" onchange="updateConfig(${index}, 'mass', this.value)"></label>
@@ -314,6 +320,14 @@ function createUI() {
             </div>
         `;
         container.appendChild(div);
+    });
+    
+    // 削除ボタンのイベントリスナーを追加
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const planetIndex = parseInt(this.getAttribute('data-planet-index'));
+            removePlanet(planetIndex);
+        });
     });
 }
 
@@ -583,14 +597,36 @@ function updateTrails() {
 }
 
 function animate() {
+
     requestAnimationFrame(animate);
+    stats.begin();
     
     updatePhysics();
     renderer.render(scene, camera);
+    stats.end();
+
 }
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-} 
+}
+
+// イベントリスナーの設定
+function setupEventListeners() {
+    // 惑星追加ボタン
+    document.getElementById('addPlanetBtn').addEventListener('click', addPlanet);
+    
+    // リセットボタン
+    document.getElementById('resetBtn').addEventListener('click', resetSimulation);
+    
+    // 開始/停止ボタン
+    document.getElementById('startBtn').addEventListener('click', toggleSimulation);
+    
+    // 軌道クリアボタン
+    document.getElementById('clearTrailsBtn').addEventListener('click', clearTrails);
+}
+
+// 初期化時にイベントリスナーを設定
+setupEventListeners(); 

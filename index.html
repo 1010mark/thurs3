@@ -10,8 +10,8 @@
     <div id="ui">
         <h3>惑星設定</h3>
         <div id="planets-container"></div>
-        <button onclick="addPlanet()">惑星を追加</button>
-        <button onclick="resetSimulation()">リセット</button>
+        <button id="addPlanetBtn">惑星を追加</button>
+        <button id="resetBtn">リセット</button>
         <div style="margin-top: 10px;">
             <label>時間スケール: <input type="number" id="timeScale" value="86400" step="1" style="width: 80px;"></label>
             <div style="font-size: 11px; color: #aaa;">1 = 1sim秒/フレーム, 0.1 = 0.1sim秒/フレーム</div>
@@ -19,8 +19,8 @@
     </div>
     
     <div id="controls">
-        <button id="startBtn" onclick="toggleSimulation()">開始</button>
-        <button onclick="clearTrails()">軌道クリア</button>
+        <button id="startBtn">開始</button>
+        <button id="clearTrailsBtn">軌道クリア</button>
     </div>
     
     <div id="info">
@@ -31,7 +31,6 @@
         <div style="font-size: 11px; color: #aaa;">現実スケール: 1 unit = 1,000,000 km</div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
