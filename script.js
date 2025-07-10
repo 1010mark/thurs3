@@ -510,20 +510,17 @@ function checkOrbitCompletion(planet, planetIndex, currentTime) {
     planet.lastDetectionDistance = Infinity;
     planet.lastDetectionFrame    = currentFrame;
     updateOrbitDisplay(planetIndex, planet.pendingOrbitCount, currentTime);  // (保留中)
-    console.log(`軌道検出(保留中): 惑星${planetIndex}, 周回=${planet.pendingOrbitCount}`);
   }
 
   // --- 3) 保留中の最接近更新 ---
-  console.log(planet.pendingOrbitCount, dist0, threshold, planet.lastDetectionDistance);
   if (planet.pendingOrbitCount > 0 && dist0 < threshold) {
-    if (dist0 < planet.lastDetectionDistance) {
-      planet.lastDetectionDistance = dist0;
-      planet.lastDetectionFrame    = currentFrame;
-      // lastDetectionFrameのときの時間を計算（60FPS想定）
-      const detectionTime = planet.lastDetectionFrame / 60;
-      updateOrbitDisplay(planetIndex, planet.pendingOrbitCount, detectionTime);  // (保留中) 更新
-      console.log(`最接近更新: 惑星${planetIndex}, 距離=${dist0.toFixed(3)}`);
-    }
+          if (dist0 < planet.lastDetectionDistance) {
+        planet.lastDetectionDistance = dist0;
+        planet.lastDetectionFrame    = currentFrame;
+        // lastDetectionFrameのときの時間を計算（60FPS想定）
+        const detectionTime = planet.lastDetectionFrame / 60;
+        updateOrbitDisplay(planetIndex, planet.pendingOrbitCount, detectionTime);  // (保留中) 更新
+      }
   }
 
   // --- 4) 離脱確定：しきい値の２倍以上離れたら "確定" ---
@@ -533,7 +530,6 @@ function checkOrbitCompletion(planet, planetIndex, currentTime) {
     planet.angleAccumulated -= 2 * Math.PI;  // 次サイクルへ
     const detectionTime = planet.lastDetectionFrame / 60;
     updateOrbitDisplay(planetIndex, planet.orbitCount, detectionTime);  // (確定)
-    console.log(`軌道確定: 惑星${planetIndex}, 確定=${planet.orbitCount}`);
   }
 }
 
