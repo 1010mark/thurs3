@@ -303,6 +303,7 @@ function createUI() {
         div.innerHTML = `
             <h4>${config.name} ${index > 0 ? `<button class="remove-btn" data-planet-index="${index}">削除</button>` : ''}</h4>
             ${index > 0 ? `<div class="orbit-info"><span id="orbit-display-${index}" style="display: none; color: #00ff00; font-size: 0.9em;"></span></div>` : ''}
+            ${index > 0 ? `<div class="orbit-info"><span id="fifty-orbit-display-${index}" style="display: none; color: #ff0000; font-size: 1.0em; font-weight: bold;"></span></div>` : ''}
             <div class="input-group">
                 <label>質量: <input type="number" value="${config.mass}" onchange="updateConfig(${index}, 'mass', this.value)"></label>
                 <label>色: <input type="color" value="${config.color}" onchange="updateConfig(${index}, 'color', this.value)"></label>
@@ -421,6 +422,10 @@ function resetSimulation() {
                 const orbitDisplay = document.getElementById(`orbit-display-${index}`);
                 if (orbitDisplay) {
                     orbitDisplay.style.display = 'none';
+                }
+                const fiftyOrbitDisplay = document.getElementById(`fifty-orbit-display-${index}`);
+                if (fiftyOrbitDisplay) {
+                    fiftyOrbitDisplay.style.display = 'none';
                 }
             }
         }
@@ -567,8 +572,17 @@ function updateOrbitDisplay(planetIndex, orbitCount, simTime) {
         const isPending = planet && planet.pendingOrbitCount > 0 && planet.pendingOrbitCount === orbitCount;
         const statusText = isPending ? "(保留中)" : "(確定)";
         
-                orbitDisplay.textContent = `軌道${orbitCount}周完了${statusText}: ${simTime.toFixed(1)}秒 (${realTimeText})`;
+        orbitDisplay.textContent = `軌道${orbitCount}周完了${statusText}: ${simTime.toFixed(1)}秒 (${realTimeText})`;
         orbitDisplay.style.display = 'inline';
+        
+        // 50周完了時の特別表示
+        if (orbitCount === 50 && !isPending) {
+            const fiftyOrbitDisplay = document.getElementById(`fifty-orbit-display-${planetIndex}`);
+            if (fiftyOrbitDisplay) {
+                fiftyOrbitDisplay.textContent = `50周時刻: ${simTime.toFixed(1)}秒 (${realTimeText})`;
+                fiftyOrbitDisplay.style.display = 'inline';
+            }
+        }
     }
 }
 
