@@ -54,6 +54,11 @@ input[type="color"] {
     border-radius: 3px;
 }
 
+input[type="checkbox"] {
+    margin-right: 5px;
+    transform: scale(1.2);
+}
+
 button {
     background: #4CAF50;
     color: white;

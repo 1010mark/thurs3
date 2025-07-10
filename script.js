@@ -356,9 +356,8 @@ function addPlanet() {
     createUI();
     
     // 新しい惑星の軌道周期情報を初期化
-    const newPlanetIndex = planets.length - 1;
-    if (planets[newPlanetIndex]) {
-        const planet = planets[newPlanetIndex];
+    if (planets.length > 0) {
+        const planet = planets[planets.length - 1];
         
         // 軌道検出用プロパティの初期化
         const rel0 = new THREE.Vector3().subVectors(planet.position, planet.centerPosition);
@@ -450,8 +449,8 @@ function updatePhysics() {
     // デフォルトは1 sim秒に設定
     const dt = parseFloat(document.getElementById('timeScale').value) || 1;
     
-    // 正しくスケール済みのGを使用（UIスライダーではなく）
-    const G_val = G;
+    // 摂動無視設定を取得
+    const ignorePerturbation = document.getElementById('ignorePerturbation').checked;
     
     // 万有引力計算
     planets.forEach((planet, i) => {
@@ -460,12 +459,15 @@ function updatePhysics() {
         planets.forEach((otherPlanet, j) => {
             if (i === j) return;
             
+            // 摂動無視が有効な場合、太陽（index=0）以外の引力を無視
+            if (ignorePerturbation && j !== 0) return;
+            
             const r = new THREE.Vector3().subVectors(otherPlanet.position, planet.position);
             const distance = r.length();
             
             if (distance > 0) {
                 // 正しくスケール済みGを使う
-                const forceMagnitude = G_val * planet.mass * otherPlanet.mass / (distance * distance);
+                const forceMagnitude = G * planet.mass * otherPlanet.mass / (distance * distance);
                 r.normalize();
                 r.multiplyScalar(forceMagnitude);
                 force.add(r);
